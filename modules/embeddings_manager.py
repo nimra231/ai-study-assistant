@@ -3,7 +3,6 @@ import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 import config
-from modules.embeddings_manager import get_embeddings_manager
 
 
 class Summarizer:
