@@ -2,16 +2,12 @@
 import sys
 import os
 
-# Add project root to Python path (pages run from a different cwd)
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, ROOT_DIR)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
 
-import streamlit as st
-from modules.ui_components import render_header, render_info_box
-# ... rest of your imports
 import streamlit as st
 from modules.ui_components import render_header, render_metric_card, render_info_box
-
 
 def show_dashboard():
     render_header("🏠 Dashboard", "Your study command center")
