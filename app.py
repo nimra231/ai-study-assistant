@@ -1,5 +1,5 @@
 """
-AI Study Assistant - Main Application
+AI Study Assistant - Main Application v2
 Run with: streamlit run app.py
 """
 
