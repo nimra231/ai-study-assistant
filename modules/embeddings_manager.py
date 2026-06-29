@@ -3,8 +3,7 @@ import os
 import json
 import streamlit as st
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-
+from langchain_community.vectorstores import FAISS
 # Config
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 VECTOR_STORE_PATH = "data/faiss_index"
