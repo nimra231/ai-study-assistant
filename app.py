@@ -1,4 +1,7 @@
-"""AI Study Assistant - Main App."""
+"""AI Study Assistant - Main Application v2
+Run with: streamlit run app.py
+"""
+
 import sys
 import os
 
@@ -8,20 +11,6 @@ if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
 import streamlit as st
-import config
-from modules.ui_components import apply_custom_styles, render_sidebar, render_header
-from modules.embeddings_manager import get_embeddings_manager
-"""
-AI Study Assistant - Main Application v2
-Run with: streamlit run app.py
-"""
-
-import streamlit as st
-import sys
-import os
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
 import config
 from modules.ui_components import apply_custom_styles, render_sidebar, render_footer
 from modules.embeddings_manager import get_embeddings_manager
