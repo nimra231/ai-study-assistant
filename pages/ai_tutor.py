@@ -1,4 +1,11 @@
 """AI Tutor Page."""
+import sys
+import os
+
+# Fix path for Streamlit Cloud - pages run from different cwd
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
 import streamlit as st
 from modules.ui_components import render_header, render_chat_message, render_info_box
 from modules.rag_engine import get_rag_engine
