@@ -1,3 +1,16 @@
+"""AI Study Assistant - Main App."""
+import sys
+import os
+
+# FIX: Add project root to Python path for Streamlit Cloud
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
+import streamlit as st
+import config
+from modules.ui_components import apply_custom_styles, render_sidebar, render_header
+from modules.embeddings_manager import get_embeddings_manager
 """
 AI Study Assistant - Main Application v2
 Run with: streamlit run app.py
