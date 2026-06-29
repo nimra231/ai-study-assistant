@@ -1,6 +1,5 @@
 """Summarizer - Concise, Detailed, Exam-Focused summaries."""
 import streamlit as st
-from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 import config
 
