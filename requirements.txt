@@ -18,3 +18,4 @@ pandas
 numpy
 pillow
 requests
+langchain-huggingface
