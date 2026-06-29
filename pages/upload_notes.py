@@ -1,4 +1,12 @@
+
 """Upload Notes Page."""
+import sys
+import os
+
+# Fix path for Streamlit Cloud - pages run from different cwd
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
 import streamlit as st
 import os
 from modules.ui_components import render_header, render_info_box
