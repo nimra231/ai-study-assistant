@@ -2,6 +2,8 @@ streamlit
 langchain
 langchain-community
 langchain-google-genai
+langchain-openai
+langgraph
 faiss-cpu
 sentence-transformers
 transformers
@@ -11,6 +13,7 @@ pymupdf
 python-docx
 python-pptx
 openai
+google-genai
 pandas
 numpy
 pillow
