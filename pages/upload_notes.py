@@ -1,4 +1,4 @@
-"""Summary Page."""
+"""Upload Notes Page."""
 import sys
 import os
 
@@ -8,19 +8,21 @@ if ROOT_DIR not in sys.path:
 
 import streamlit as st
 from modules.ui_components import render_header, render_info_box
-from modules.summarizer import get_summarizer
 
-def show_summary():
-    render_header("📝 Summary", "Summarize your notes")
+def show_upload_notes():
+    render_header("📤 Upload Notes", "Upload your study materials")
     
-    if not st.session_state.get("uploaded_files"):
-        render_info_box("Upload documents first!", "warning")
-        return
+    st.subheader("📎 Upload New Documents")
+    uploaded = st.file_uploader(
+        "Choose files (PDF, DOCX, PPTX, TXT)",
+        type=["pdf", "docx", "pptx", "txt"],
+        accept_multiple_files=True
+    )
     
-    try:
-        summarizer = get_summarizer()
-        st.write("Summary will appear here!")
-    except Exception as e:
-        st.error(f"Error: {e}")
+    if uploaded:
+        for file in uploaded:
+            st.success(f"✅ Uploaded: {file.name}")
+            st.session_state.uploaded_files[file.name] = True
+        st.info("Documents uploaded! You can now use AI Tutor, Summary, Quiz Generator, etc.")
 
-show_summary()
+show_upload_notes()
