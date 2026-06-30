@@ -1,12 +1,12 @@
-"""Summarizer - Concise, Detailed, Exam-Focused summaries."""
+"""Quiz Generator Module."""
 import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
-import config
 from modules.embeddings_manager import get_embeddings_manager
+import config
 
 
-class Summarizer:
+class QuizGenerator:
     def __init__(self):
         self.llm = None
         self.embeddings_manager = get_embeddings_manager()
@@ -16,24 +16,24 @@ class Summarizer:
         cfg = config.get_llm_config()
         try:
             if cfg["provider"] == "openai":
-                self.llm = ChatOpenAI(api_key=cfg["api_key"], model=cfg["model"], temperature=0.3, max_tokens=4000)
+                self.llm = ChatOpenAI(api_key=cfg["api_key"], model=cfg["model"], temperature=0.7, max_tokens=2000)
             else:
-                self.llm = ChatGoogleGenerativeAI(api_key=cfg["api_key"], model=cfg["model"], temperature=0.3, max_output_tokens=4000)
+                self.llm = ChatGoogleGenerativeAI(api_key=cfg["api_key"], model=cfg["model"], temperature=0.7, max_output_tokens=2000)
         except Exception as e:
             st.error(f"Failed to initialize LLM: {str(e)}")
 
-    def _get_context(self, max_chars=15000):
+    def _get_context(self, max_chars=10000):
         if self.embeddings_manager.vector_store is None:
             return ""
         all_chunks = []
         for doc_name in self.embeddings_manager.get_document_names():
-            results = self.embeddings_manager.search(f"content from {doc_name}", k=10)
+            results = self.embeddings_manager.search(f"content from {doc_name}", k=8)
             for r in results:
-                all_chunks.append(r["content"])
+                all_chunks.append(r.page_content if hasattr(r, 'page_content') else str(r))
         context = "\n\n".join(all_chunks)
         return context[:max_chars] + "..." if len(context) > max_chars else context
 
-    def generate_summary(self, summary_type):
+    def generate_quiz(self, quiz_type, difficulty, num_questions=5):
         if self.llm is None:
             return "LLM not initialized."
         if self.embeddings_manager.vector_store is None:
@@ -43,24 +43,14 @@ class Summarizer:
         if not context:
             return "No content available."
 
-        if summary_type == "Concise":
-            prompt = f"""Create a CONCISE summary (max 10 bullet points) of:
-{context}"""
-        elif summary_type == "Detailed":
-            prompt = f"""Create a DETAILED summary with headings and explanations of:
-{context}"""
-        else:
-            prompt = f"""Create an EXAM-FOCUSED summary with:
-1. Key Concepts
-2. Likely Exam Questions
-3. Common Mistakes
-4. Quick Checklist
+        prompt = f"""Generate {num_questions} {difficulty} {quiz_type} questions based on:
 
-Material:
-{context}"""
+{context}
+
+Format each question clearly with answers."""
 
         try:
-            with st.spinner(f"Generating {summary_type} summary..."):
+            with st.spinner("Generating quiz..."):
                 r = self.llm.invoke(prompt)
                 return r.content if hasattr(r, 'content') else str(r)
         except Exception as e:
@@ -68,10 +58,10 @@ Material:
             return ""
 
 
-_summarizer = None
+_quiz_generator = None
 
-def get_summarizer():
-    global _summarizer
-    if _summarizer is None:
-        _summarizer = Summarizer()
-    return _summarizer
+def get_quiz_generator():
+    global _quiz_generator
+    if _quiz_generator is None:
+        _quiz_generator = QuizGenerator()
+    return _quiz_generator
