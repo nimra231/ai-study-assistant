@@ -2,7 +2,7 @@
 import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.chains import RetrievalQA
+from langchain_community.chains import RetrievalQA
 import config
 from modules.embeddings_manager import get_embeddings_manager
 
