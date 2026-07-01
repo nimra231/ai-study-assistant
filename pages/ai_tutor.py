@@ -7,11 +7,11 @@ if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
 import streamlit as st
+from modules.ui_components import render_header, render_chat_message
 from modules.rag_engine import get_rag_engine
 
 def show_ai_tutor():
-    st.title("🎓 AI Tutor")
-    st.write("Ask questions about your study materials!")
+    render_header("🎓 AI Tutor", "Ask questions about your study materials!")
     
     if not st.session_state.get("uploaded_files"):
         st.warning("📚 Please upload study materials first!")
