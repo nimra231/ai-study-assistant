@@ -17,10 +17,17 @@ def show_quiz_generator():
         render_info_box("Upload documents first!", "warning")
         return
     
-    try:
-        generator = get_quiz_generator()
-        st.write("Quiz will appear here!")
-    except Exception as e:
-        st.error(f"Error: {e}")
+    quiz_type = st.selectbox("Quiz Type", ["Multiple Choice", "True/False", "Short Answer"])
+    difficulty = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"])
+    num_questions = st.slider("Number of Questions", 1, 10, 5)
+    
+    if st.button("Generate Quiz"):
+        with st.spinner("Generating quiz..."):
+            try:
+                generator = get_quiz_generator()
+                quiz = generator.generate_quiz(quiz_type, difficulty, num_questions)
+                st.markdown(quiz)
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
 
 show_quiz_generator()
