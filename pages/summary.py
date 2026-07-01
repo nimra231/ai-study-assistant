@@ -17,10 +17,15 @@ def show_summary():
         render_info_box("Upload documents first!", "warning")
         return
     
-    try:
-        summarizer = get_summarizer()
-        st.write("Summary will appear here!")
-    except Exception as e:
-        st.error(f"Error: {e}")
+    summary_type = st.selectbox("Summary Type", ["Concise", "Detailed", "Exam-Focused"])
+    
+    if st.button("Generate Summary"):
+        with st.spinner("Generating summary..."):
+            try:
+                summarizer = get_summarizer()
+                summary = summarizer.generate_summary(summary_type)
+                st.markdown(summary)
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
 
 show_summary()
