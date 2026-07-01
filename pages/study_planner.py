@@ -17,10 +17,16 @@ def show_study_planner():
         render_info_box("Upload documents first!", "warning")
         return
     
-    try:
-        planner = get_study_planner()
-        st.write("Study plan will appear here!")
-    except Exception as e:
-        st.error(f"Error: {e}")
+    exam_date = st.date_input("Exam Date")
+    daily_hours = st.number_input("Daily Study Hours", 1, 12, 2)
+    
+    if st.button("Create Study Plan"):
+        with st.spinner("Creating study plan..."):
+            try:
+                planner = get_study_planner()
+                plan = planner.create_study_plan(exam_date, daily_hours)
+                st.markdown(plan)
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
 
 show_study_planner()
