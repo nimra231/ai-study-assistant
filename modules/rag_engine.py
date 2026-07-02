@@ -1,3 +1,4 @@
+# modules/rag_engine.py
 """RAG Engine - Answer questions using retrieved context."""
 import streamlit as st
 from langchain_openai import ChatOpenAI
@@ -18,9 +19,19 @@ class RAGEngine:
         cfg = config.get_llm_config()
         try:
             if cfg["provider"] == "openai":
-                self.llm = ChatOpenAI(api_key=cfg["api_key"], model=cfg["model"], temperature=0.7, max_tokens=2000)
+                self.llm = ChatOpenAI(
+                    api_key=cfg["api_key"], 
+                    model=cfg["model"], 
+                    temperature=0.7, 
+                    max_tokens=2000
+                )
             else:
-                self.llm = ChatGoogleGenerativeAI(api_key=cfg["api_key"], model=cfg["model"], temperature=0.7, max_output_tokens=2000)
+                self.llm = ChatGoogleGenerativeAI(
+                    api_key=cfg["api_key"], 
+                    model=cfg["model"], 
+                    temperature=0.7, 
+                    max_output_tokens=2000
+                )
         except Exception as e:
             st.error(f"Failed to initialize LLM: {str(e)}")
 
@@ -29,7 +40,9 @@ class RAGEngine:
             return None
         
         try:
-            retriever = self.embeddings_manager.vector_store.as_retriever(search_kwargs={"k": 5})
+            retriever = self.embeddings_manager.vector_store.as_retriever(
+                search_kwargs={"k": 5}
+            )
             qa_chain = RetrievalQA.from_chain_type(
                 llm=self.llm,
                 chain_type="stuff",
@@ -44,22 +57,29 @@ class RAGEngine:
     def ask(self, question):
         """Ask a question and get an answer based on uploaded documents."""
         if self.llm is None:
-            return "LLM not initialized. Check API key."
+            return "❌ LLM not initialized. Please check your API key."
+        
+        # Check if documents exist
+        if not st.session_state.get("processed_files"):
+            return "📚 No documents uploaded. Please upload documents first in the 'Upload Notes' section."
         
         if self.embeddings_manager.vector_store is None:
-            return "No documents uploaded. Please upload documents first."
+            return "📚 No documents processed. Please re-upload your documents."
         
         try:
             qa_chain = self._create_qa_chain()
             if qa_chain is None:
-                return "Failed to create QA chain."
+                return "❌ Failed to create QA chain. Please check your configuration."
             
             result = qa_chain.invoke({"query": question})
             answer = result.get("result", str(result))
             return answer
         except Exception as e:
-            return f"Error processing question: {str(e)}"
-
+            return f"❌ Error processing question: {str(e)}"
+    
+    def get_document_count(self):
+        """Get number of processed documents"""
+        return len(st.session_state.get("processed_files", []))
 
 _rag_engine = None
 
